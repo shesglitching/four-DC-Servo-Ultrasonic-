@@ -1,0 +1,71 @@
+ int M1A = 2;
+int M1B = 3;
+int M2A = 4;
+int M2B = 5;
+
+int M3A = 6;
+int M3B = 7;
+int M4A = 8;
+int M4B = 9;
+
+void setup() {
+  for (int i = 2; i <= 9; i++) {
+    pinMode(i, OUTPUT);
+  }
+}
+
+void loop() {
+
+  forward();
+  delay(30000);
+
+  backward();
+  delay(60000);
+
+  for (int i = 0; i < 6; i++) {
+    right();
+    delay(5000);
+
+    left();
+    delay(5000);
+  }
+
+  stopMotors();
+  while (1);
+}
+
+void forward() {
+  digitalWrite(M1A,HIGH); digitalWrite(M1B,LOW);
+  digitalWrite(M2A,HIGH); digitalWrite(M2B,LOW);
+  digitalWrite(M3A,HIGH); digitalWrite(M3B,LOW);
+  digitalWrite(M4A,HIGH); digitalWrite(M4B,LOW);
+}
+
+void backward() {
+  digitalWrite(M1A,LOW); digitalWrite(M1B,HIGH);
+  digitalWrite(M2A,LOW); digitalWrite(M2B,HIGH);
+  digitalWrite(M3A,LOW); digitalWrite(M3B,HIGH);
+  digitalWrite(M4A,LOW); digitalWrite(M4B,HIGH);
+}
+
+void right() {
+  digitalWrite(M1A,HIGH); digitalWrite(M1B,LOW);
+  digitalWrite(M2A,HIGH); digitalWrite(M2B,LOW);
+
+  digitalWrite(M3A,LOW); digitalWrite(M3B,HIGH);
+  digitalWrite(M4A,LOW); digitalWrite(M4B,HIGH);
+}
+
+void left() {
+  digitalWrite(M1A,LOW); digitalWrite(M1B,HIGH);
+  digitalWrite(M2A,LOW); digitalWrite(M2B,HIGH);
+
+  digitalWrite(M3A,HIGH); digitalWrite(M3B,LOW);
+  digitalWrite(M4A,HIGH); digitalWrite(M4B,LOW);
+}
+
+void stopMotors() {
+  for (int i = 2; i <= 9; i++) {
+    digitalWrite(i, LOW);
+  }
+}
