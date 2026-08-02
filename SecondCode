@@ -1,0 +1,142 @@
+#include <Servo.h>
+
+int IN1 = 2, IN2 = 3;
+int IN3 = 4, IN4 = 5;
+int IN5 = 6, IN6 = 7;
+int IN7 = 8, IN8 = 9;
+
+Servo myServo;
+const int servoPin = 11;
+
+const int sigPin = 10;
+
+long duration;
+int distance;
+
+void setup() {
+
+  Serial.begin(9600);
+
+  pinMode(IN1, OUTPUT); pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT); pinMode(IN4, OUTPUT);
+  pinMode(IN5, OUTPUT); pinMode(IN6, OUTPUT);
+  pinMode(IN7, OUTPUT); pinMode(IN8, OUTPUT);
+
+  stopMotors();
+
+  myServo.attach(servoPin);
+  myServo.write(90);
+  delay(1000);
+}
+
+void forward() {
+
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+
+  digitalWrite(IN5, LOW);
+  digitalWrite(IN6, HIGH);
+
+  digitalWrite(IN7, LOW);
+  digitalWrite(IN8, HIGH);
+}
+
+void backward() {
+
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+
+  digitalWrite(IN5, HIGH);
+  digitalWrite(IN6, LOW);
+
+  digitalWrite(IN7, HIGH);
+  digitalWrite(IN8, LOW);
+}
+
+void stopMotors() {
+
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+
+  digitalWrite(IN5, LOW);
+  digitalWrite(IN6, LOW);
+
+  digitalWrite(IN7, LOW);
+  digitalWrite(IN8, LOW);
+}
+
+int getDistance() {
+
+  pinMode(sigPin, OUTPUT);
+
+  digitalWrite(sigPin, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(sigPin, HIGH);
+  delayMicroseconds(10);
+
+  digitalWrite(sigPin, LOW);
+
+  pinMode(sigPin, INPUT);
+
+  duration = pulseIn(sigPin, HIGH, 30000);
+
+  if (duration == 0)
+    return 0;
+
+  distance = duration / 30;
+
+  return distance;
+}
+
+void loop() {
+
+  distance = getDistance();
+
+  Serial.print("Distance: ");
+  Serial.println(distance);
+
+  if (distance >= 200) {
+
+    stopMotors();
+
+    backward();
+    delay(600);
+
+    stopMotors();
+
+    myServo.write(30);
+    delay(800);
+
+    myServo.write(150);
+    delay(800);
+
+    myServo.write(90);
+    delay(500);
+
+    while (getDistance() >= 200) {
+
+      stopMotors();
+
+      Serial.println("Obstacle still there");
+
+      delay(200);
+    }
+
+  } else {
+
+    forward();
+
+  }
+
+  delay(100);
+}
